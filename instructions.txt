@@ -1,0 +1,127 @@
+The game begins with a board of tiles, with entities occupying non-blocking tiles (at least one mech
+ and at least one enemy). The exact set of tiles and entities is given by the level file used to initialise
+ the game. Next to the board of tiles, a list is presented. Each element of the list displays an entity,
+ alongside its position, current health, and current strength. The list is ordered by entity priority,
+ with the highest priority entity appearing at the top (see Figure 1 for an example).
+ The following four phases repeat until the end of the game:
+ 1. Player movement phase: This is the main phase of the game where all user interaction occurs.
+ The user may click on any tile on the board. The action taken after a tile is clicked is sum
+marized in Table 1. See Figure 2 for an example of the movement system. During the player
+ movement phase, the user may also click one of the three buttons:
+ ˆ
+ ˆ
+ ˆ
+ If the user clicks the Save button, they should be prompted to enter a name for their save
+ f
+ ile via a filedialog. Upon entering a name and clicking to save the file, a new level file
+ should be created based on the current game state. If a mech has been moved before the
+ save button is clicked, the user is warned instead via an error message box.
+ If the user clicks the Load button they should be prompted to select a saved file with a
+ f
+ iledialog. When they select a file gameplay should restart as if the selected level file was
+ the file used to initialise the game.
+ If the user clicks the End Turn button, the current player movement phase is ended, and
+ the program moves onto the attack phase.
+ 2. Attack phase: During the attack phase each entity, in descending order of priority, makes an
+ attack. An attack affects a certain set of tiles depending on the entity making it. See Table 2
+ for the tiles affected by each entity. If a building tile is affected by an attack, then that building
+ loses health equal to the strength of the attacking entity. If an entity is on a tile affected by
+ an attack, then that entity is affected in a manner depending on what entity is performing the
+ attack. See Table 2 for the effects of attacks for each entity. If an entity is destroyed during
+ the attack phase by an entity with higher priority, it does not attack and is removed from
+ the game. After each entity has performed an attack, the program immediately moves to the
+ enemy movement phase.
+ 3. Enemy movement phase: During the enemy movement phase, all enemies are assigned an
+ objective. An objective is the position of a tile on the board and is assigned based on the type
+ of entity as described in Table 3. Each enemy, in descending priority order, then moves to the
+ tile that minimizes the length of the shortest path from itself to it’s objective. Note that the
+ enemy can only move to tiles reachable via valid paths of length no greater than it’s speed. If
+ there exists no valid path from an enemy to its objective, the enemy does not change position.
+ 3
+After every enemy has moved, the display is updated and the program moves to termination
+ checking.
+ 4. Termination checking: If all enemies are destroyed, at least one mech is not destroyed, and at
+ least one building on the board is not destroyed, the user has won and a victory message is
+ displayed via an info messagebox. If all buildings on the board are destroyed or all mechs are
+ destroyed, the user has lost and a defeat message is displayed via an info messagebox. Both
+ victory and defeat messageboxes ask the user if they wish to play again. If the user does want
+ to play again, then the game is reinitialised using the level file and gameplay starts again from
+ the beginning. If the user does not want to play again the program closes the game window
+ and exits gracefully. If no messageboxes were displayed then the program immediately returns
+ to the player movement phase.
+ Clicked Tile
+ Action to take
+ Tile containing a mech that
+ has not moved during the
+ current movement phase
+ Tiles which the mech can move to are highlighted in green. Valid tiles
+ are those to which a valid path can be formed from the mech’s position
+ with length less than or equal to the mech’s speed.
+ Tile highlighted by click
+ing a tile containing a mech
+ that has not moved during
+ the current movement phase
+ The relevant mech is moved to that tile.
+ Tile containing an enemy, or
+ Tile containing a mech that
+ has moved during the cur
+rent player movement phase
+ Tiles which will be attacked by that entity during the following attack
+ phase are highlighted in red.
+ Any other tile.
+ Nothing.
+ Table 1: Effect of clicking tiles during player movment phase. Every time the user clicks a tile, all
+ previous highlighting is removed.
+ 4
+Figure 2: Movement of a mech during the player movement phase. The user clicks on the Heal
+ Mech, and then clicks on one of the highlighted squares. Clicking the heal mech again highlights the
+ squares it will attack.
+ 5
+Entity TilesAffected AttackEffect
+ TankMech Thetwosetsoffivetilesextend
+ing inahorizontal line fromthe
+ tankmech: beginning fromthe
+ tiledirectlyleftofthetankmech
+ andextendingleft,andbeginning
+ fromthetiledirectlyrightof the
+ tankmechandextendingrightre
+spectively.
+ Receivedamageequal tostrengthoftankmech.
+ HealMech Thefourtilesdirectlyadjacentto
+ healmech (not includingdiago
+nals)
+ Iftargetisamech,recoverhealthequaltostrength
+ ofhealmech.Donothingotherwise.
+ Scorpion The four sets of two tiles ex
+tending inhorizontal andverti
+cal lines fromthe scorpion: be
+ginningfromthetiledirectlyleft
+ ofthescorpionandextendingleft,
+ beginning fromthe tile directly
+ rightof thescorpionandextend
+ingright,beginningfromthetile
+ directlyaboveofthescorpionand
+ extendingupward,andbeginning
+ fromthetiledirectlybelowscor
+pion and extending downwards
+ respectively.
+ Receivedamageequal tostrengthofscorpion.
+ Firefly Thetwosetsoffivetilesextend
+inginaverticallinefromthefire
+fly: beginning fromthe tile di
+rectlyaboveofthefireflyandex
+tendingupwards, andbeginning
+ fromthe tile directlybelowthe
+ fireflyandextendingdownwards
+ respectively.
+ Receivedamageequal tostrengthoffirefly.
+ Table2:Entityattackbehavior
+ Enemy AssignedObjective
+ Scorpion Positionof tilecontainingmechwiththegreatesthealth. If two
+ mechsaretiedforgreatesthealth,choosepositionoftilecontaining
+ themechwiththehighestpriority.
+ Firefly Positionofbuildingtilewiththeleasthealthamongstthebuildings
+ thatarenotdestroyed. Iftwobuildingsaretiedfortheleasthealth,
+ choose thepositionof thebuilding tile in thebottommost row.
+ If there is still atie for lowesthealth, choose thepositionof the
+ buildingtileintherightmostcolumn

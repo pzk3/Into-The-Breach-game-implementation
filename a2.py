@@ -4,10 +4,6 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 from typing import Optional, Callable
 
-# Name: Mihir Nepal
-# Student Number: 48846152
-# ----------------
-
 # Write your classes and functions here
 def play_game(root: tk.Tk, file_path: str) -> None:
     """
